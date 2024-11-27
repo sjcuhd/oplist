@@ -5,6 +5,11 @@ Koyuki
 用于文件目录美化以及背景图
 */
 
+/*去掉底部*/
+.footer {
+    display: none !important;
+}
+
 body{
 	background-image:url('http://api.hancat.work/cloud/api.php');//将此处替换为你自己的背景图api地址
 	background-repeat:no-repeat;
