@@ -11,7 +11,7 @@ Koyuki
 }
 
 body{
-	background-image:url('http://api.hancat.work/cloud/api.php');//将此处替换为你自己的背景图api地址
+	background-image:url('https://gitlab.com/xiaowansm/img/-/raw/main/pictures/2022/08/12_7_37_5_202208120737459.jpg');//将此处替换为你自己的背景图api地址
 	background-repeat:no-repeat;
 	background-size:cover;
 	background-attachment: fixed;
