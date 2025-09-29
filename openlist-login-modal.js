@@ -52,28 +52,28 @@
     `;
 
     // --- 2. 将HTML和CSS注入到页面中 ---
-    // 注入CSS
     const styleElement = document.createElement('style');
-    styleElement.innerHTML = modalCSS;
-    document.head.appendChild(styleElement);
-    // 注入HTML
+    styleElement。innerHTML = modalCSS;
+    document.head。appendChild(styleElement);
     const modalContainer = document.createElement('div');
     modalContainer.innerHTML = modalHTML;
-    document.body.appendChild(modalContainer.firstElementChild);
+    document。body。appendChild(modalContainer.firstElementChild);
 
 
     // --- 3. 核心功能逻辑 ---
     function setupAuthUI() {
         const authLinkContainer = document.getElementById('auth-link-container');
-        if (!authLinkContainer) return; // 如果容器不存在则退出
+        if (!authLinkContainer) return;
 
         const isLoggedIn = localStorage.getItem('token');
         let linkHTML = '';
 
         if (isLoggedIn) {
-            linkHTML = `<a class="nav-link" href="/@manage" target="_blank"><i class="fa-solid fa-folder-gear" style="color:#409EFF;"></i> 管理</a>`;
+            // 【修改点 1】: 添加了 <i class="..."></i> 图标
+            // 【修改点 2】: 移除了 target="_blank"
+            linkHTML = `<a class="nav-link" href="/@manage"><i class="fa-solid fa-folder-gear" style="color:#409EFF;" aria-hidden="true"></i> 管理</a>`;
         } else {
-            linkHTML = `<a class="nav-link" href="javascript:void(0);" id="show-login-modal-btn"><i class="fa-solid fa-right-to-bracket" style="color:#409EFF;"></i> 登录</a>`;
+            linkHTML = `<a class="nav-link" href="javascript:void(0);" id="show-login-modal-btn"><i class="fa-solid fa-right-to-bracket" style="color:#409EFF;" aria-hidden="true"></i> 登录</a>`;
         }
         authLinkContainer.innerHTML = linkHTML;
 
