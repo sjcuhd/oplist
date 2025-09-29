@@ -1,6 +1,5 @@
 (() => {
     // --- 1. 定义登录弹窗的HTML和CSS ---
-    // [修改] 在表单中增加了“记住账号”的复选框
     const modalHTML = `
         <div id="login-modal" class="modal-overlay" style="display: none;">
             <div class="modal-content">
@@ -9,16 +8,11 @@
                 <form id="login-form">
                     <div class="form-group">
                         <label for="username-input">用户名</label>
-                        <input type="text" id="username-input" autocomplete="username" required>
+                        <input type="text" id="username-input" required>
                     </div>
                     <div class="form-group">
                         <label for="password-input">密码</label>
-                        <input type="password" id="password-input" autocomplete="current-password" required>
-                    </div>
-                    <!-- [新增] 记住账号的复选框 -->
-                    <div class="form-group-remember">
-                        <input type="checkbox" id="remember-me-checkbox">
-                        <label for="remember-me-checkbox">记住账号</label>
+                        <input type="password" id="password-input" required>
                     </div>
                     <button type="submit" class="login-submit-btn">登录</button>
                     <p id="login-message" class="login-message"></p>
@@ -27,7 +21,6 @@
         </div>
     `;
 
-    // [修改] 增加了“记住账号”复选框的样式
     const modalCSS = `
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -47,12 +40,6 @@
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; font-size: 14px; color: #555; }
         .form-group input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        /* [新增] 复选框样式 */
-        .form-group-remember {
-            display: flex; align-items: center; margin-bottom: 15px;
-            font-size: 14px; color: #555;
-        }
-        .form-group-remember input { width: auto; margin-right: 8px; }
         .login-submit-btn {
             width: 100%; padding: 10px; border: none; border-radius: 4px;
             background-color: #409EFF; color: white; font-size: 16px;
@@ -65,9 +52,11 @@
     `;
 
     // --- 2. 将HTML和CSS注入到页面中 ---
+    // 注入CSS
     const styleElement = document.createElement('style');
     styleElement.innerHTML = modalCSS;
     document.head.appendChild(styleElement);
+    // 注入HTML
     const modalContainer = document.createElement('div');
     modalContainer.innerHTML = modalHTML;
     document.body.appendChild(modalContainer.firstElementChild);
@@ -76,50 +65,33 @@
     // --- 3. 核心功能逻辑 ---
     function setupAuthUI() {
         const authLinkContainer = document.getElementById('auth-link-container');
-        if (!authLinkContainer) return;
+        if (!authLinkContainer) return; // 如果容器不存在则退出
 
         const isLoggedIn = localStorage.getItem('token');
         let linkHTML = '';
 
         if (isLoggedIn) {
-            // [修改] 为“管理”链接添加图标，并移除 target="_blank"
-            linkHTML = `<a class="nav-link" href="/@manage"><i class="fa-solid fa-folder-gear" style="color:#409EFF;"></i> 管理</a>`;
+            linkHTML = `<a class="nav-link" href="/@manage" target="_blank"><i class="fa-solid fa-folder-gear" style="color:#409EFF;"></i> 管理</a>`;
         } else {
             linkHTML = `<a class="nav-link" href="javascript:void(0);" id="show-login-modal-btn"><i class="fa-solid fa-right-to-bracket" style="color:#409EFF;"></i> 登录</a>`;
         }
         authLinkContainer.innerHTML = linkHTML;
 
+        // 如果未登录，则为弹窗绑定事件
         if (!isLoggedIn) {
-            const modal = document。getElementById('login-modal');
+            const modal = document.getElementById('login-modal');
             const showBtn = document.getElementById('show-login-modal-btn');
             const closeBtn = document.querySelector('.modal-close-btn');
             const loginForm = document.getElementById('login-form');
             const messageEl = document.getElementById('login-message');
-            const usernameInput = document.getElementById('username-input');
-            const rememberCheckbox = document.getElementById('remember-me-checkbox');
 
-            // [修改] 显示弹窗时，检查是否有记住的用户名
-            showBtn.onclick = () => {
-                const savedUsername = localStorage.getItem('saved_username');
-                if (savedUsername) {
-                    usernameInput.value = savedUsername;
-                    rememberCheckbox.checked = true;
-                } else {
-                    usernameInput.value = ''; // 清空
-                    rememberCheckbox.checked = false;
-                }
-                messageEl.textContent = ''; // 清空上次的消息
-                messageEl.className = 'login-message';
-                modal.style.display = 'flex';
-            };
-            
-            closeBtn。onclick = () => { modal。style。display = 'none'; };
+            showBtn.onclick = () => { modal.style.display = 'flex'; };
+            closeBtn.onclick = () => { modal.style.display = 'none'; };
             modal.onclick = (event) => { if (event.target === modal) { modal.style.display = 'none'; } };
 
-            // [修改] 表单提交时，处理“记住账号”逻辑
             loginForm.onsubmit = (e) => {
                 e.preventDefault();
-                const username = usernameInput.value;
+                const username = document.getElementById('username-input').value;
                 const password = document.getElementById('password-input').value;
                 
                 messageEl.textContent = '登录中...';
@@ -130,30 +102,22 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username: username, password: password })
                 })
-                .键，然后(response => response.json())
-                .键，然后(data => {
+                .then(response => response.json())
+                .then(data => {
                     if (data.code === 200 && data.data.token) {
                         messageEl.textContent = '登录成功！页面即将刷新...';
                         messageEl.classList.add('success');
                         localStorage.setItem('token', data.data.token);
-
-                        // [新增] 登录成功后，根据复选框状态保存或移除用户名
-                        if (rememberCheckbox.checked) {
-                            localStorage.setItem('saved_username', username);
-                        } else {
-                            localStorage。removeItem('saved_username');
-                        }
-
-                        setTimeout(() => { location.reload(); }， 1500);
+                        setTimeout(() => { location.reload(); }, 1500);
                     } else {
                         messageEl.textContent = data.message || '用户名或密码错误！';
-                        messageEl。classList。add('error');
+                        messageEl.classList.add('error');
                     }
                 })
                 .catch(error => {
                     console.error('Login Error:', error);
                     messageEl.textContent = '登录请求失败，请检查网络。';
-                    messageEl。classList。add('error');
+                    messageEl.classList.add('error');
                 });
             };
         }
@@ -165,6 +129,6 @@
             clearInterval(interval);
             setupAuthUI();
         }
-    }， 200);
+    }, 200);
 
 })();
