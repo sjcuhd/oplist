@@ -124,7 +124,7 @@ body{
     position: absolute;
     left: 0;
     bottom: 0;
-    background: url(https://fastly.jsdelivr.net/gh/sjcuhd/oplist@main/img/img_hennyano_body.png) left bottom/contain no-repeat
+    background: url(https://wget.la/https://raw.githubusercontent.com/sjcuhd/oplist/main/img/img_hennyano_body.png) left bottom/contain no-repeat
 }
 .sw-Hennnyano .eyes {
     width: 100%;
@@ -132,7 +132,7 @@ body{
     position: absolute;
     left: 0;
     bottom: 0;
-    background: url(https://fastly.jsdelivr.net/gh/sjcuhd/oplist@main/img/img_hennyano_eyes.png) left bottom/contain no-repeat
+    background: url(https://wget.la/https://raw.githubusercontent.com/sjcuhd/oplist/main/img/img_hennyano_eyes.png) left bottom/contain no-repeat
 }
 
 @media(any-hover: hover) {
