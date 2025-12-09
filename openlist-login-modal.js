@@ -1,7 +1,7 @@
-// --- START OF FILE openlist-login-modal-pro.js ---
+// --- START OF FILE openlist-login-modal-secure.js ---
 
 (() => {
-    // --- 1. SVG 图标定义 (内嵌以保证无需外部字体库也能显示) ---
+    // --- 1. SVG 图标 (保持原样，无需修改) ---
     const icons = {
         user: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`,
         lock: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>`,
@@ -10,54 +10,43 @@
         login: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>`
     };
 
-    // --- 2. 现代简约 CSS ---
+    // --- 2. 样式定义 (毛玻璃 + 高端动效) ---
     const modalCSS = `
-        /* 引入字体 (可选，这里使用系统字体栈以保持极速) */
         .ol-auth-wrapper {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; /* 优先使用中文安全字体 */
         }
 
-        /* 遮罩层：磨砂玻璃背景 */
+        /* 遮罩层：高斯模糊 */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.4); 
-            backdrop-filter: blur(8px); /* 核心：背景模糊 */
-            -webkit-backdrop-filter: blur(8px);
+            background-color: rgba(0, 0, 0, 0.35); 
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             display: flex;
             justify-content: center; align-items: center; 
             z-index: 99999;
             opacity: 0; visibility: hidden;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
-        /* 显示状态 */
-        .modal-overlay.active {
-            opacity: 1; visibility: visible;
-        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
 
-        /* 弹窗主体：白透玻璃质感 */
+        /* 弹窗卡片：磨砂玻璃质感 */
         .modal-content {
-            background: rgba(255, 255, 255, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.6);
             padding: 40px 35px; 
-            border-radius: 20px;
-            width: 90%; max-width: 380px; 
+            border-radius: 24px;
+            width: 85%; max-width: 360px; 
             position: relative;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.15); 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15); 
             color: #333;
-            transform: scale(0.95) translateY(10px);
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform: scale(0.92) translateY(15px);
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
+        .modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
         
-        /* 弹窗激活时的动画 */
-        .modal-overlay.active .modal-content {
-            transform: scale(1) translateY(0);
-        }
-        
-        /* 错误时的抖动动画 */
-        .shake {
-            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-        }
+        /* 错误震动动画 */
+        .shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
         @keyframes shake {
             10%, 90% { transform: translate3d(-1px, 0, 0); }
             20%, 80% { transform: translate3d(2px, 0, 0); }
@@ -67,125 +56,129 @@
 
         /* 关闭按钮 */
         .modal-close-btn {
-            position: absolute; top: 15px; right: 15px; 
-            width: 30px; height: 30px;
+            position: absolute; top: 18px; right: 18px; 
+            width: 32px; height: 32px;
             display: flex; align-items: center; justify-content: center;
             border-radius: 50%;
-            cursor: pointer; color: #999;
-            transition: all 0.2s ease;
+            cursor: pointer; color: #a0a0a0;
+            transition: all 0.2s;
         }
-        .modal-close-btn:hover { background: rgba(0,0,0,0.05); color: #333; }
+        .modal-close-btn:hover { background: rgba(0,0,0,0.06); color: #333; transform: rotate(90deg); }
         .modal-close-btn svg { width: 20px; height: 20px; }
 
-        /* 标题 */
+        /* 标题样式 */
         .modal-content h3 { 
-            margin: 0 0 30px; 
+            margin: 5px 0 30px; 
             text-align: center; 
             font-size: 24px; 
             font-weight: 600; 
-            letter-spacing: 1px;
-            background: linear-gradient(135deg, #409EFF 0%, #764ba2 100%);
+            letter-spacing: 2px;
+            color: #2c3e50;
+            background: linear-gradient(120deg, #409EFF, #6c5ce7);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        /* 输入框容器 */
-        .form-group { position: relative; margin-bottom: 20px; }
+        /* 表单元素 */
+        .form-group { position: relative; margin-bottom: 22px; }
         
-        /* 输入框图标 */
         .form-icon {
-            position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
-            color: #aaa; transition: color 0.3s;
-            width: 18px; height: 18px;
+            position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+            color: #b0b0b0; transition: color 0.3s;
+            width: 18px; height: 18px; pointer-events: none;
         }
         .form-icon svg { width: 100%; height: 100%; }
 
-        /* 输入框本体 */
         .form-group input { 
-            width: 100%; padding: 14px 15px 14px 45px; 
+            width: 100%; padding: 14px 15px 14px 48px; 
             border: 2px solid transparent; 
-            border-radius: 12px; 
-            background: #f3f5f7;
+            border-radius: 14px; 
+            background: #f0f2f5;
             font-size: 15px; outline: none;
             transition: all 0.3s ease;
-            box-sizing: border-box;
-            color: #333;
+            box-sizing: border-box; color: #333;
         }
+        .form-group input::placeholder { color: #bbb; }
         .form-group input:focus {
             background: #fff;
             border-color: #409EFF;
-            box-shadow: 0 0 0 4px rgba(64, 158, 255, 0.1);
+            box-shadow: 0 4px 12px rgba(64, 158, 255, 0.1);
         }
         .form-group input:focus + .form-icon { color: #409EFF; }
 
         /* 登录按钮 */
         .login-submit-btn {
-            width: 100%; padding: 14px; border: none; border-radius: 12px;
-            background: linear-gradient(135deg, #409EFF 0%, #66b1ff 100%);
-            color: white; font-size: 16px; font-weight: 600;
-            cursor: pointer; margin-top: 10px;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 5px 15px rgba(64, 158, 255, 0.3);
+            width: 100%; padding: 15px; border: none; border-radius: 14px;
+            background: linear-gradient(135deg, #409EFF 0%, #6c5ce7 100%);
+            color: white; font-size: 16px; font-weight: 600; letter-spacing: 1px;
+            cursor: pointer; margin-top: 12px;
+            transition: all 0.2s;
+            box-shadow: 0 8px 20px -6px rgba(108, 92, 231, 0.4);
         }
         .login-submit-btn:hover { 
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(64, 158, 255, 0.4);
+            box-shadow: 0 12px 25px -8px rgba(108, 92, 231, 0.5);
         }
-        .login-submit-btn:active { transform: translateY(0); }
+        .login-submit-btn:active { transform: translateY(1px); }
 
-        /* 消息提示 */
+        /* 消息提示区 */
         .login-message { 
             margin-top: 20px; text-align: center; font-size: 13px; 
-            min-height: 18px; opacity: 0; transition: opacity 0.3s;
+            min-height: 20px; opacity: 0; transition: opacity 0.3s;
+            font-weight: 500;
         }
         .login-message.show { opacity: 1; }
-        .login-message.success { color: #2ecc71; }
-        .login-message.error { color: #e74c3c; }
+        .login-message.success { color: #00b894; }
+        .login-message.error { color: #ff7675; }
 
-        /* --- 导航栏按钮美化 --- */
+        /* --- 触发按钮样式 --- */
         .nav-btn-styled {
-            display: inline-flex; align-items: center; gap: 6px;
-            padding: 6px 16px; border-radius: 20px;
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 8px 20px; border-radius: 30px;
             font-size: 14px; font-weight: 500;
             text-decoration: none !important;
             transition: all 0.3s ease;
-            border: 1px solid transparent;
+            cursor: pointer;
         }
         
         .nav-btn-login {
-            background: rgba(64, 158, 255, 0.1);
+            background: white;
             color: #409EFF !important;
+            border: 1px solid rgba(64, 158, 255, 0.2);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
         .nav-btn-login:hover {
-            background: rgba(64, 158, 255, 0.2);
+            border-color: #409EFF;
+            background: rgba(64, 158, 255, 0.05);
             transform: translateY(-1px);
         }
 
         .nav-btn-manage {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
             color: white !important;
-            box-shadow: 0 2px 8px rgba(118, 75, 162, 0.3);
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+            border: none;
         }
         .nav-btn-manage:hover {
-            box-shadow: 0 4px 12px rgba(118, 75, 162, 0.5);
+            box-shadow: 0 6px 20px rgba(108, 92, 231, 0.4);
             transform: translateY(-1px);
         }
         .nav-btn-styled svg { width: 16px; height: 16px; }
     `;
 
-    // --- 3. HTML 结构 ---
+    // --- 3. HTML 结构 (修改为全中文) ---
     const modalHTML = `
         <div id="login-modal" class="modal-overlay ol-auth-wrapper">
             <div class="modal-content" id="modal-card">
-                <div class="modal-close-btn">${icons.close}</div>
-                <h3>Welcome Back</h3>
+                <div class="modal-close-btn" title="关闭">${icons.close}</div>
+                <h3>欢迎登录</h3>
                 <form id="login-form">
                     <div class="form-group">
-                        <input type="text" id="username-input" placeholder="用户名" autocomplete="username" required>
+                        <input type="text" id="username-input" placeholder="请输入用户名" autocomplete="username" required>
                         <div class="form-icon">${icons.user}</div>
                     </div>
                     <div class="form-group">
-                        <input type="password" id="password-input" placeholder="密码" autocomplete="current-password" required>
+                        <input type="password" id="password-input" placeholder="请输入密码" autocomplete="current-password" required>
                         <div class="form-icon">${icons.lock}</div>
                     </div>
                     <button type="submit" class="login-submit-btn">立即登录</button>
@@ -195,7 +188,7 @@
         </div>
     `;
 
-    // --- 4. 注入 CSS 和 HTML ---
+    // --- 4. 注入样式和HTML ---
     const styleElement = document.createElement('style');
     styleElement.innerHTML = modalCSS;
     document.head.appendChild(styleElement);
@@ -204,20 +197,27 @@
     modalContainer.innerHTML = modalHTML;
     document.body.appendChild(modalContainer.firstElementChild);
 
-
-    // --- 5. 核心逻辑 ---
+    // --- 5. 交互逻辑 ---
     function setupAuthUI() {
-        // 目标容器：这里假设你的模板里有一个 id="auth-link-container" 的容器
-        // 如果没有，会自动寻找 footer 或者 header 插入
         let authLinkContainer = document.getElementById('auth-link-container');
         
-        // 容错处理：如果找不到容器，尝试找一个合适的地方插入
+        // 自动寻找挂载点 (保底方案)
         if (!authLinkContainer) {
-            const rightNav = document.querySelector('.header-right') || document.querySelector('.right') || document.body;
+            const possibleParents = [
+                document.querySelector('.header-right'),
+                document.querySelector('.right'),
+                document.querySelector('.nav-right'),
+                document.body
+            ];
+            const parent = possibleParents.find(p => p !== null);
+            
             authLinkContainer = document.createElement('div');
             authLinkContainer.id = 'auth-link-container';
-            authLinkContainer.style.cssText = "position: fixed; bottom: 20px; right: 20px; z-index: 1000;"; // 默认悬浮在右下角作为保底
-            rightNav.appendChild(authLinkContainer);
+            // 如果是挂载在 body 上，给一个右下角悬浮定位
+            if (parent === document.body) {
+                authLinkContainer.style.cssText = "position: fixed; bottom: 25px; right: 25px; z-index: 1000;";
+            }
+            parent.appendChild(authLinkContainer);
         }
 
         const isLoggedIn = localStorage.getItem('token');
@@ -236,7 +236,6 @@
         }
         authLinkContainer.innerHTML = linkHTML;
 
-        // 绑定事件
         if (!isLoggedIn) {
             const modal = document.getElementById('login-modal');
             const modalCard = document.getElementById('modal-card');
@@ -248,19 +247,19 @@
 
             const openModal = () => {
                 modal.classList.add('active');
-                document.getElementById('username-input').focus();
+                setTimeout(() => document.getElementById('username-input').focus(), 100);
             };
 
             const closeModal = () => {
                 modal.classList.remove('active');
-                messageEl.className = 'login-message'; // 重置消息
+                messageEl.className = 'login-message'; 
                 messageEl.textContent = '';
+                submitBtn.textContent = '立即登录';
+                submitBtn.style.opacity = '1';
             };
 
-            showBtn.onclick = openModal;
+            if(showBtn) showBtn.onclick = openModal;
             closeBtn.onclick = closeModal;
-            
-            // 点击遮罩层关闭
             modal.onclick = (event) => { if (event.target === modal) closeModal(); };
 
             loginForm.onsubmit = (e) => {
@@ -268,7 +267,7 @@
                 const username = document.getElementById('username-input').value;
                 const password = document.getElementById('password-input').value;
                 
-                // UI Loading State
+                // Loading 状态
                 submitBtn.textContent = '验证中...';
                 submitBtn.style.opacity = '0.7';
                 messageEl.className = 'login-message';
@@ -287,42 +286,47 @@
                         localStorage.setItem('token', data.data.token);
                         setTimeout(() => { location.reload(); }, 1000);
                     } else {
-                        throw new Error(data.message || '账号或密码错误');
+                        // ❌ 安全处理：统一抛出模糊错误，不透传后端具体的 "User not found"
+                        throw new Error('用户名或密码错误');
                     }
                 })
                 .catch(error => {
-                    console.error('Login Error:', error);
-                    messageEl.textContent = error.message || '登录失败，请重试';
+                    console.error('Login Error:', error); // 控制台保留真实错误以便调试
+                    
+                    // 界面上只显示通用错误，或网络错误
+                    const displayMsg = error.message === '用户名或密码错误' ? error.message : '网络请求失败';
+                    
+                    messageEl.textContent = displayMsg;
                     messageEl.classList.add('show', 'error');
-                    submitBtn.textContent = '立即登录';
+                    submitBtn.textContent = '重试';
                     submitBtn.style.opacity = '1';
                     
-                    // 触发错误抖动动画
+                    // 触发抖动动画
                     modalCard.classList.remove('shake');
-                    void modalCard.offsetWidth; // 强制重绘
+                    void modalCard.offsetWidth; 
                     modalCard.classList.add('shake');
                 });
             };
         }
     }
 
-    // --- 6. 智能加载检测 ---
+    // --- 6. 启动器 ---
     const init = () => {
-        // 尝试寻找挂载点，最多尝试 10 次，每次间隔 300ms
         let attempts = 0;
         const interval = setInterval(() => {
-            const container = document.getElementById('auth-link-container') || document.querySelector(".footer") || document.body;
+            // 尝试检测常见的容器
+            const container = document.getElementById('auth-link-container') || document.body;
             if (container) {
                 clearInterval(interval);
                 setupAuthUI();
             } else {
                 attempts++;
-                if (attempts > 10) { // 超时强制加载
+                if (attempts > 15) { 
                     clearInterval(interval);
-                    setupAuthUI(); 
+                    setupAuthUI(); // 强制加载
                 }
             }
-        }, 300);
+        }, 200);
     };
 
     if (document.readyState === 'loading') {
