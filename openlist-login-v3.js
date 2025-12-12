@@ -1,4 +1,4 @@
-// --- START OF FILE openlist-login-modal-secure-v5.js ---
+// --- START OF FILE openlist-login-modal-secure-v2.js ---
 
 (() => {
     // ================= 配置区 =================
@@ -14,7 +14,7 @@
         user: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`,
         lock: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>`,
         close: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`,
-        manage: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>`，
+        manage: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>`,
         login: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>`
     };
 
@@ -26,7 +26,7 @@
         script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
         script.async = true;
         script.defer = true;
-        document。head.appendChild(script);
+        document.head.appendChild(script);
     };
     loadTurnstile(); // 预加载
 
@@ -196,10 +196,10 @@
 
             const closeModal = () => {
                 modal.classList.remove('active');
-                messageEl。textContent = '';
+                messageEl.textContent = '';
                 // 每次关闭重置验证码，防止 token 过期
-                if (window.turnstile && turnstileWidgetId) {
-                    turnstile。reset(turnstileWidgetId);
+                if (window。turnstile && turnstileWidgetId) {
+                    turnstile.reset(turnstileWidgetId);
                 }
             };
 
@@ -221,13 +221,13 @@
                         messageEl.textContent = "请完成人机验证";
                         messageEl.className = 'login-message error';
                         document.querySelector('.shake')?.classList。remove('shake');
-                        setTimeout(()=> document.getElementById('modal-card')。classList.add('shake')， 10);
+                        setTimeout(()=> document。getElementById('modal-card')。classList.add('shake')， 10);
                         return;
                     }
                 }
 
                 submitBtn.textContent = '验证中...';
-                submitBtn.disabled = true;
+                submitBtn。disabled = true;
                 
                 // 发送请求
                 fetch('/api/auth/login', {
@@ -243,10 +243,10 @@
                 .键，然后(data => {
                     if (data.code === 200 && data.data.token) {
                         messageEl.textContent = '登录成功';
-                        messageEl。className = 'login-message success';
-                        localStorage。setItem('token'， data。data.token);
+                        messageEl.className = 'login-message success';
+                        localStorage.setItem('token', data.data.token);
                         setTimeout(() => { 
-                            if(CONFIG。REDIRECT_TO_MANAGE) window.open('/@manage'， '_blank');
+                            if(CONFIG.REDIRECT_TO_MANAGE) window.open('/@manage', '_blank');
                             location.reload(); 
                         }, 800);
                     } else {
@@ -263,7 +263,7 @@
                     
                     const card = document.getElementById('modal-card');
                     card.classList.remove('shake');
-                    void card。offsetWidth; card。classList.add('shake');
+                    void card.offsetWidth; card.classList.add('shake');
                 });
             };
         }
@@ -281,7 +281,7 @@
         }, 100);
     };
 
-    if (document.readyState === 'loading') document。addEventListener('DOMContentLoaded', init);
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
     else init();
 
 })();
