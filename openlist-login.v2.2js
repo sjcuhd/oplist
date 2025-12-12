@@ -1,6 +1,8 @@
-// --- START OF FILE openlist-login-modal-secure-v2.1.js ---
+// --- START OF FILE openlist-login-modal-secure-v2.2.js ---
 
 (() => {
+    console.log("[OpenList Script] 脚本开始加载...");
+
     // ================= 配置区 =================
     const CONFIG = {
         // 🔴 请在此处填入你的 Cloudflare Turnstile Site Key
@@ -14,23 +16,22 @@
         user: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`,
         lock: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>`,
         close: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`,
-        // 修复：将末尾的中文逗号改为英文逗号
-        manage: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>`，
+        manage: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>`,
         login: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>`
     };
 
     // ================= 2. 动态加载 Turnstile SDK =================
     const loadTurnstile = () => {
         if (document.getElementById('cf-turnstile-script')) return;
+        console.log("[OpenList Script] 开始加载 Turnstile SDK...");
         const script = document.createElement('script');
         script.id = 'cf-turnstile-script';
         script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
         script.async = true;
-        script。defer = true;
-        // 修复：将中文句号改为英文点号
+        script.defer = true;
         document.head.appendChild(script);
     };
-    loadTurnstile(); // 预加载
+    loadTurnstile();
 
     // ================= 3. 样式定义 =================
     const modalCSS = `
@@ -40,7 +41,8 @@
             background-color: rgba(0, 0, 0, 0.4); 
             backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
             display: flex; justify-content: center; align-items: center; 
-            z-index: 99999; opacity: 0; visibility: hidden;
+            z-index: 2147483647; /* 最高的 z-index */
+            opacity: 0; visibility: hidden;
             transition: all 0.3s ease;
         }
         .modal-overlay.active { opacity: 1; visibility: visible; }
@@ -96,6 +98,18 @@
         .nav-btn-login { background: #fff; color: #409EFF; border: 1px solid #c6e2ff; }
         .nav-btn-manage { background: #6c5ce7; color: white; border: none; }
         .nav-btn-styled svg { width: 16px; height: 16px; }
+        
+        /* 强制覆盖位置，确保能看到 */
+        #auth-link-container.fixed-fallback {
+            position: fixed !important; 
+            bottom: 30px !important; 
+            right: 30px !important; 
+            z-index: 2147483647 !important;
+            background: white;
+            padding: 5px;
+            border-radius: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
     `;
 
     // ================= 4. 构建 HTML =================
@@ -117,9 +131,7 @@
                         <input type="password" id="password-input" placeholder="密码" required>
                         <div class="form-icon">${icons.lock}</div>
                     </div>
-                    <!-- Turnstile 挂载点 -->
                     <div class="cf-turnstile-container" id="cf-turnstile-widget"></div>
-                    
                     <button type="submit" class="login-submit-btn">登录</button>
                     <p id="login-message" class="login-message"></p>
                 </form>
@@ -134,26 +146,22 @@
     // ================= 5. 核心逻辑 =================
     let turnstileWidgetId = null;
 
-    function setupAuthUI() {
+    function setupAuthUI(mountPoint, isFallback = false) {
+        console.log(`[OpenList Script] 正在挂载 UI (Fallback模式: ${isFallback})`);
+        
         let authLinkContainer = document.getElementById('auth-link-container');
+        
         if (!authLinkContainer) {
-            // 尝试智能定位
-            const parents = [
-                document.querySelector('.header-right'),
-                document.querySelector('.right'), 
-                document.querySelector('.nav-right')
-            ];
-            const parent = parents.find(p => p !== null) || document.body;
-            
             authLinkContainer = document.createElement('div');
             authLinkContainer.id = 'auth-link-container';
-            if (parent === document.body) {
-                authLinkContainer.style.cssText = "position: fixed; bottom: 25px; right: 25px; z-index: 1000;";
+            if (isFallback) {
+                authLinkContainer.classList.add('fixed-fallback');
             }
-            parent.appendChild(authLinkContainer);
+            mountPoint.appendChild(authLinkContainer);
         }
 
         const isLoggedIn = localStorage.getItem('token');
+        console.log(`[OpenList Script] 当前登录状态: ${isLoggedIn ? '已登录' : '未登录'}`);
 
         if (isLoggedIn) {
             authLinkContainer.innerHTML = `
@@ -166,7 +174,7 @@
                     ${icons.login} 登录
                 </a>`;
             
-            // 绑定事件
+            // 重新绑定事件
             const modal = document.getElementById('login-modal');
             const showBtn = document.getElementById('show-login-modal-btn');
             const closeBtn = document.querySelector('.modal-close-btn');
@@ -174,113 +182,97 @@
             const messageEl = document.getElementById('login-message');
             const submitBtn = document.querySelector('.login-submit-btn');
 
-            // 渲染验证码
             const renderTurnstile = () => {
                 if (window.turnstile && !turnstileWidgetId) {
                     try {
                         turnstileWidgetId = turnstile.render('#cf-turnstile-widget', {
                             sitekey: CONFIG.CF_SITE_KEY,
                             theme: 'light',
-                            appearance: 'always', // 强制显示，防止无感验证导致的高度抖动
-                            callback: function(token) {
-                                messageEl.textContent = ""; // 清除错误提示
-                            }
+                            appearance: 'always',
+                            callback: function() { messageEl.textContent = ""; }
                         });
-                    } catch (e) { console.log('Turnstile render error', e); }
+                    } catch (e) { console.error('Turnstile render error', e); }
                 }
             };
 
             const openModal = () => {
-                modal.classList.add('active');
+                modal。classList。add('active');
                 setTimeout(() => document.getElementById('username-input').focus(), 100);
-                renderTurnstile(); // 打开时尝试渲染
+                renderTurnstile(); 
             };
-
             const closeModal = () => {
-                modal.classList.remove('active');
-                messageEl.textContent = '';
-                // 每次关闭重置验证码，防止 token 过期
-                if (window.turnstile && turnstileWidgetId) {
-                    turnstile.reset(turnstileWidgetId);
-                }
+                modal。classList。remove('active');
+                if (window。turnstile && turnstileWidgetId) turnstile.reset(turnstileWidgetId);
             };
 
-            showBtn.onclick = openModal;
-            closeBtn.onclick = closeModal;
+            if(showBtn) showBtn.onclick = openModal;
+            if(closeBtn) closeBtn.onclick = closeModal;
             modal.onclick = (e) => { if(e.target === modal) closeModal(); };
 
-            loginForm.onsubmit = (e) => {
-                e.preventDefault();
-                
-                const username = document.getElementById('username-input').value;
-                const password = document.getElementById('password-input').value;
-                
-                // --- 校验验证码 ---
+            loginForm。onsubmit = (e) => {
+                e。preventDefault();
+                const username = document.getElementById('username-input')。value;
+                const password = document。getElementById('password-input')。value;
                 let cfToken = "";
-                if (window.turnstile) {
-                    cfToken = turnstile.getResponse(turnstileWidgetId);
+                if (window。turnstile) {
+                    cfToken = turnstile。getResponse(turnstileWidgetId);
                     if (!cfToken) {
                         messageEl.textContent = "请完成人机验证";
-                        messageEl.className = 'login-message error';
-                        document.querySelector('.shake')?.classList.remove('shake');
-                        setTimeout(()=> document.getElementById('modal-card').classList.add('shake'), 10);
+                        messageEl。className = 'login-message error';
                         return;
                     }
                 }
-
-                submitBtn.textContent = '验证中...';
+                submitBtn。textContent = '验证中...';
                 submitBtn.disabled = true;
                 
-                // 发送请求
                 fetch('/api/auth/login', {
                     method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        // 将 Token 放在 Header 里传给可能的 Worker 中间件
-                        'cf-turnstile-response': cfToken 
-                    },
+                    headers: { 'Content-Type': 'application/json', 'cf-turnstile-response': cfToken },
                     body: JSON.stringify({ username, password })
                 })
-                .then(r => r.json())
-                .then(data => {
+                .键，然后(r => r.json())
+                .键，然后(data => {
                     if (data.code === 200 && data.data.token) {
                         messageEl.textContent = '登录成功';
                         messageEl.className = 'login-message success';
                         localStorage.setItem('token', data.data.token);
-                        setTimeout(() => { 
-                            if(CONFIG.REDIRECT_TO_MANAGE) window.open('/@manage', '_blank');
-                            location.reload(); 
-                        }, 800);
-                    } else {
-                        throw new Error('用户名或密码错误');
-                    }
+                        setTimeout(() => { location.reload(); }, 800);
+                    } else { throw new Error('用户名或密码错误'); }
                 })
                 .catch(err => {
                     messageEl.textContent = err.message || '登录失败';
                     messageEl.className = 'login-message error';
                     submitBtn.textContent = '登录';
                     submitBtn.disabled = false;
-                    // 登录失败刷新验证码
                     if (window.turnstile) turnstile.reset(turnstileWidgetId);
-                    
-                    const card = document.getElementById('modal-card');
-                    card.classList.remove('shake');
-                    void card.offsetWidth; card.classList.add('shake');
                 });
             };
         }
     }
 
-    // ================= 6. 初始化 =================
+    // ================= 6. 强化版初始化逻辑 =================
     const init = () => {
         let attempts = 0;
+        // 每 200ms 检查一次，检查 50 次 (共 10秒)
         const timer = setInterval(() => {
-            if (document.getElementById('auth-link-container') || document.body || attempts > 20) {
-                clearInterval(timer);
-                setupAuthUI();
-            }
             attempts++;
-        }, 100);
+            // 尝试寻找 Alist/OpenList 常见的导航栏容器
+            const headerTarget = 
+                document.querySelector('.header-right') || 
+                document.querySelector('.right') || 
+                document.querySelector('.nav-right') ||
+                document.querySelector('.hope-stack.direction-row'); // 针对 Hope 主题
+
+            if (headerTarget) {
+                console.log("[OpenList Script] 找到导航栏容器，正在挂载...");
+                clearInterval(timer);
+                setupAuthUI(headerTarget, false);
+            } else if (attempts >= 50) {
+                console.log("[OpenList Script] 未找到导航栏，强制挂载到右下角...");
+                clearInterval(timer);
+                setupAuthUI(document.body, true);
+            }
+        }, 200);
     };
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
