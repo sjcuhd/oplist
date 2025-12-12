@@ -1,4 +1,4 @@
-// --- START OF FILE auth.js ---
+// --- START OF FILE auth_v4.js ---
 (() => {
     "use strict";
     console.log("[OpenList] Modern UI & Watchdog 启动...");
@@ -19,12 +19,12 @@
 
     // 2. 动态加载 Turnstile SDK
     const loadTurnstile = () => {
-        if (document。getElementById('cf-turnstile-script')) return;
+        if (document.getElementById('cf-turnstile-script')) return;
         const s = document.createElement('script');
         s。id = 'cf-turnstile-script';
         s.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
         s。async = true; s。defer = true;
-        document。head.appendChild(s);
+        document.head.appendChild(s);
     };
     loadTurnstile();
 
