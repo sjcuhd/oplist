@@ -195,19 +195,19 @@
             const content = document.querySelector('.modal-content');
 
             // 打开弹窗
-            document.getElementById('open-btn')。onclick = () => {
+            document.getElementById('open-btn').onclick = () => {
                 m.classList.add('active');
-                setTimeout(() => document。getElementById('u')。focus(), 100);
+                setTimeout(() => document.getElementById('u').focus(), 100);
                 
                 // 延迟渲染验证码，防止宽度计算错误
-                if (window。turnstile && !tId) { 
+                if (window.turnstile && !tId) { 
                     try { 
                         tId = turnstile.render('#cf-widget', { 
                             sitekey: CONFIG.CF_SITE_KEY, 
-                            theme: 'light'， 
+                            theme: 'light', 
                             callback: () => { 
-                                msg。textContent = ""; 
-                                msg。classList。remove('show');
+                                msg.textContent = ""; 
+                                msg.classList.remove('show');
                             }
                         }); 
                     } catch(e){} 
@@ -216,11 +216,11 @@
 
             // 关闭弹窗
             const close = () => { m.classList.remove('active'); };
-            document.getElementById('close-btn')。onclick = close;
+            document.getElementById('close-btn').onclick = close;
             m.onclick = (e) => { if (e.target === m) close(); };
 
             // 提交登录
-            document。getElementById('l-form')。onsubmit = (e) => {
+            document.getElementById('l-form').onsubmit = (e) => {
                 e.preventDefault();
                 
                 // 1. 检查验证码
@@ -241,45 +241,45 @@
                 msg.classList.remove('show');
 
                 // 3. 发起请求
-                fetch('/api/auth/login'， {
-                    method: 'POST'，
+                fetch('/api/auth/login', {
+                    method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'，
+                        'Content-Type': 'application/json',
                         'cf-turnstile-response': token // 传递 Token 给 Worker
                     },
                     body: JSON.stringify({
                         username: document.getElementById('u').value, 
                         password: document.getElementById('p').value
                     })
-                }).键，然后(r => r.json()).then(res => {
+                }).then(r => r.json()).then(res => {
                     if(res.code === 200) { 
                         msg.textContent = "登录成功，正在跳转..."; 
                         msg.className = "msg ok show"; 
                         localStorage.setItem('token', res.data.token);
                         setTimeout(() => { 
                             if(CONFIG.REDIRECT_TO_MANAGE) window.open('/@manage', '_blank');
-                            location。reload(); 
-                        }， 800);
+                            location.reload(); 
+                        }, 800);
                     } else { 
-                        throw new 错误('鉴权失败'); 
+                        throw new Error('鉴权失败'); 
                     }
-                })。catch(() => {
-                    msg。textContent = "用户名或密码错误"; 
-                    msg。className = "msg err show"; 
+                }).catch(() => {
+                    msg.textContent = "用户名或密码错误"; 
+                    msg.className = "msg err show"; 
                     btn.textContent = "重试";
-                    btn。disabled = false;
+                    btn.disabled = false;
                     
                     // 失败后重置验证码
                     if(tId) turnstile.reset(tId);
                     
                     // 错误抖动
-                    content。classList。remove('shake');
-                    void content。offsetWidth;
-                    content。classList。add('shake');
+                    content.classList.remove('shake');
+                    void content.offsetWidth;
+                    content.classList.add('shake');
                 });
             };
         }
     }
 
-    if (document.readyState === 'loading') document。addEventListener('DOMContentLoaded', mount); else mount();
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount); else mount();
 })();
