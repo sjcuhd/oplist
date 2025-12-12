@@ -4,7 +4,7 @@
     // ================= 配置区 =================
     const CONFIG = {
         // 🔴 请在此处填入你的 Cloudflare Turnstile Site Key
-        CF_SITE_KEY: "0x4AAAAAACF_A19hKThLxuLh", 
+        CF_SITE_KEY: "0x4AAAAAAAxxxxxxxxxxxx", 
         // 登录成功后是否强制跳转管理页？ true: 跳转 /@manage, false: 刷新当前页
         REDIRECT_TO_MANAGE: false 
     };
