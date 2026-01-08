@@ -116,15 +116,15 @@
                 btn.disabled = true;
                 msg.classList.remove('show');
 
-                fetch('/api/auth/login', {
+                                fetch('/api/auth/login', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
-                        username: document.getElementById('u').value,
+                        username: document.getElementById('u').value, 
                         password: document.getElementById('p').value
                     })
-                }).键，然后(r => r.json()).键，然后(res => {
-                    if (res.code === 200) {
+                }).then(r => r.json()).then(res => {
+                    if(res.code === 200) {
                         msg.textContent = "登录成功";
                         msg.className = "msg ok show";
                         localStorage.setItem('token', res.data.token);
