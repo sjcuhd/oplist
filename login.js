@@ -1,14 +1,11 @@
 // --- START OF FILE auth_v4.js ---
 (() => {
     "use strict";
-    console.log("[OpenList] Modern UI & Turnstile 启动...");
+    console.log("[OpenList] Modern Login UI 启动...");
 
     const CONFIG = {
-        // 🔴 必须修改：填入您的 Cloudflare Turnstile Site Key
-        CF_SITE_KEY: "0x4AAAAAACF_A19hKThLxuLh", 
-        
         // 登录成功后是否新开窗口跳转管理页？(false = 刷新当前页)
-        REDIRECT_TO_MANAGE: false 
+        REDIRECT_TO_MANAGE: false
     };
 
     // ============================================================
@@ -16,31 +13,18 @@
     // ============================================================
     const icons = {
         user: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#409EFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`,
-        
+
         lock: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#409EFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>`,
-        
+
         close: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`,
-        
+
         login_btn: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>`,
-        
+
         manage_btn: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1 2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>`
     };
 
     // ============================================================
-    // 2. 动态加载 Turnstile SDK
-    // ============================================================
-    const loadTurnstile = () => {
-        if (document.getElementById('cf-turnstile-script')) return;
-        const s = document.createElement('script');
-        s.id = 'cf-turnstile-script';
-        s.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
-        s.async = true; s.defer = true;
-        document.head.appendChild(s);
-    };
-    loadTurnstile();
-
-    // ============================================================
-    // 3. 美化样式 (Modern Clean UI)
+    // 2. 美化样式 (Modern Clean UI)
     // ============================================================
     const css = `
         /* 字体跟随系统或 OpenList 默认 */
@@ -134,9 +118,6 @@
         .nav-btn:hover { border-color: #409EFF; background: #ecf5ff; transform: translateY(-2px); }
         .nav-btn.manage { background: #409EFF; color: white; border-color: #409EFF; }
         .nav-btn.manage:hover { background: #66b1ff; }
-
-        /* 验证码容器 */
-        .cf-container { margin: 10px 0; display: flex; justify-content: center; min-height: 65px; }
         
         /* 兜底悬浮样式 */
         #auth-container.fixed-fallback { position: fixed; bottom: 30px; right: 30px; z-index: 2147483647; }
@@ -144,7 +125,7 @@
     const st = document.createElement('style'); st.innerHTML = css; document.head.appendChild(st);
 
     // ============================================================
-    // 4. 构建 HTML
+    // 3. 构建 HTML (已移除验证码区域)
     // ============================================================
     const html = `
         <div id="login-modal" class="modal-overlay ol-auth-wrapper">
@@ -161,9 +142,6 @@
                         <input id="p" type="password" placeholder="请输入密码" autocomplete="current-password" required>
                     </div>
                     
-                    <!-- 验证码挂载点 -->
-                    <div id="cf-widget" class="cf-container"></div>
-                    
                     <button type="submit" class="btn" id="s-btn">立即登录</button>
                     <p id="msg" class="msg"></p>
                 </form>
@@ -173,19 +151,18 @@
     const d = document.createElement('div'); d.innerHTML = html; document.body.appendChild(d.firstElementChild);
 
     // ============================================================
-    // 5. 核心逻辑
+    // 4. 核心逻辑 (已移除 Turnstile 相关验证)
     // ============================================================
-    let tId = null;
 
     function mount() {
         const box = document.getElementById('auth-link-container');
         if (!box) return; // 如果找不到自定义内容里的容器，就不执行
 
         const isLogged = localStorage.getItem('token');
-        
+
         // 渲染触发按钮
-        box.innerHTML = isLogged ? 
-            `<a href="/@manage" target="_blank" class="nav-btn manage">${icons.manage_btn} 管理面板</a>` : 
+        box.innerHTML = isLogged ?
+            `<a href="/@manage" target="_blank" class="nav-btn manage">${icons.manage_btn} 管理面板</a>` :
             `<a href="javascript:;" id="open-btn" class="nav-btn">${icons.login_btn} 登录</a>`;
 
         if (!isLogged) {
@@ -198,20 +175,6 @@
             document.getElementById('open-btn').onclick = () => {
                 m.classList.add('active');
                 setTimeout(() => document.getElementById('u').focus(), 100);
-                
-                // 延迟渲染验证码，防止宽度计算错误
-                if (window.turnstile && !tId) { 
-                    try { 
-                        tId = turnstile.render('#cf-widget', { 
-                            sitekey: CONFIG.CF_SITE_KEY, 
-                            theme: 'light', 
-                            callback: () => { 
-                                msg.textContent = ""; 
-                                msg.classList.remove('show');
-                            }
-                        }); 
-                    } catch(e){} 
-                }
             };
 
             // 关闭弹窗
@@ -219,59 +182,43 @@
             document.getElementById('close-btn').onclick = close;
             m.onclick = (e) => { if (e.target === m) close(); };
 
-            // 提交登录
+            // 提交登录 (已移除验证码校验)
             document.getElementById('l-form').onsubmit = (e) => {
                 e.preventDefault();
-                
-                // 1. 检查验证码
-                const token = window.turnstile ? turnstile.getResponse(tId) : "";
-                if (!token) { 
-                    msg.textContent = "请完成人机验证"; 
-                    msg.className = "msg err show"; 
-                    // 抖动提醒
-                    content.classList.remove('shake');
-                    void content.offsetWidth; // 触发重绘
-                    content.classList.add('shake');
-                    return; 
-                }
-                
-                // 2. UI Loading
-                btn.textContent = "验证中...";
+
+                // UI Loading
+                btn.textContent = "登录中...";
                 btn.disabled = true;
                 msg.classList.remove('show');
 
-                // 3. 发起请求
+                // 发起请求
                 fetch('/api/auth/login', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'cf-turnstile-response': token // 传递 Token 给 Worker
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        username: document.getElementById('u').value, 
+                        username: document.getElementById('u').value,
                         password: document.getElementById('p').value
                     })
-                }).then(r => r.json()).then(res => {
-                    if(res.code === 200) { 
-                        msg.textContent = "登录成功，正在跳转..."; 
-                        msg.className = "msg ok show"; 
+                }).键，然后(r => r.json()).键，然后(res => {
+                    if (res.code === 200) {
+                        msg.textContent = "登录成功，正在跳转...";
+                        msg.className = "msg ok show";
                         localStorage.setItem('token', res.data.token);
-                        setTimeout(() => { 
-                            if(CONFIG.REDIRECT_TO_MANAGE) window.open('/@manage', '_blank');
-                            location.reload(); 
+                        setTimeout(() => {
+                            if (CONFIG.REDIRECT_TO_MANAGE) window.open('/@manage', '_blank');
+                            location.reload();
                         }, 800);
-                    } else { 
-                        throw new Error('鉴权失败'); 
+                    } else {
+                        throw new 错误('鉴权失败');
                     }
                 }).catch(() => {
-                    msg.textContent = "用户名或密码错误"; 
-                    msg.className = "msg err show"; 
+                    msg.textContent = "用户名或密码错误";
+                    msg.className = "msg err show";
                     btn.textContent = "重试";
                     btn.disabled = false;
-                    
-                    // 失败后重置验证码
-                    if(tId) turnstile.reset(tId);
-                    
+
                     // 错误抖动
                     content.classList.remove('shake');
                     void content.offsetWidth;
