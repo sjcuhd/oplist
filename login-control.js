@@ -1,15 +1,22 @@
-// --- START OF FILE auth_v4.js ---
+// --- START OF FILE login-auth.js ---
+// OpenList 自定义登录弹窗 (去除 Turnstile 版本)
+// 更新日期: 2026-01-09
+
 (() => {
     "use strict";
     console.log("[OpenList] Modern Login UI 启动...");
 
     const CONFIG = {
         // 登录成功后是否新开窗口跳转管理页？(false = 刷新当前页)
-        REDIRECT_TO_MANAGE: false
+        REDIRECT_TO_MANAGE: false,
+        // 最大等待容器出现的时间 (毫秒)
+        MAX_WAIT_TIME: 10000,
+        // 轮询间隔 (毫秒)
+        POLL_INTERVAL: 200
     };
 
     // ============================================================
-    // 1. 图标库 (使用反引号包裹 SVG，清晰且不易报错)
+    // 1. 图标库
     // ============================================================
     const icons = {
         user: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#409EFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`,
@@ -87,7 +94,7 @@
         /* 登录按钮 */
         .btn { 
             width: 100%; padding: 15px; 
-            background: #409EFF; /* Alist 蓝 */
+            background: #409EFF;
             color: white; border: none; border-radius: 16px; 
             cursor: pointer; font-size: 16px; font-weight: 600; letter-spacing: 1px;
             margin-top: 15px; transition: 0.3s; 
@@ -125,7 +132,7 @@
     const st = document.createElement('style'); st.innerHTML = css; document.head.appendChild(st);
 
     // ============================================================
-    // 3. 构建 HTML (已移除验证码区域)
+    // 3. 构建 HTML
     // ============================================================
     const html = `
         <div id="login-modal" class="modal-overlay ol-auth-wrapper">
@@ -151,12 +158,21 @@
     const d = document.createElement('div'); d.innerHTML = html; document.body.appendChild(d.firstElementChild);
 
     // ============================================================
-    // 4. 核心逻辑 (已移除 Turnstile 相关验证)
+    // 4. 核心逻辑 - 使用轮询等待容器出现
     // ============================================================
+    let mounted = false;
 
     function mount() {
+        if (mounted) return; // 防止重复挂载
+
         const box = document.getElementById('auth-link-container');
-        if (!box) return; // 如果找不到自定义内容里的容器，就不执行
+        if (!box) {
+            console.log("[OpenList] 等待 #auth-link-container 容器...");
+            return false; // 返回 false 表示未找到
+        }
+
+        mounted = true;
+        console.log("[OpenList] 找到容器，初始化登录按钮...");
 
         const isLogged = localStorage.getItem('token');
 
@@ -182,7 +198,7 @@
             document.getElementById('close-btn').onclick = close;
             m.onclick = (e) => { if (e.target === m) close(); };
 
-            // 提交登录 (已移除验证码校验)
+            // 提交登录
             document.getElementById('l-form').onsubmit = (e) => {
                 e.preventDefault();
 
@@ -226,7 +242,40 @@
                 });
             };
         }
+
+        return true; // 返回 true 表示挂载成功
     }
 
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount); else mount();
+    // ============================================================
+    // 5. 启动逻辑 - 轮询等待容器
+    // ============================================================
+    function startPolling() {
+        const startTime = Date.当前();
+
+        const poll = () => {
+            // 尝试挂载
+            if (mount()) {
+                console.log("[OpenList] 登录模块初始化完成 ✓");
+                return;
+            }
+
+            // 检查是否超时
+            if (Date.当前() - startTime > CONFIG.MAX_WAIT_TIME) {
+                console.warn("[OpenList] 超时：未找到 #auth-link-container 容器");
+                return;
+            }
+
+            // 继续轮询
+            setTimeout(poll, CONFIG.POLL_INTERVAL);
+        };
+
+        poll();
+    }
+
+    // DOM 加载完成后开始轮询
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', startPolling);
+    } else {
+        startPolling();
+    }
 })();
